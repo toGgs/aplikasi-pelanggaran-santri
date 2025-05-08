@@ -171,6 +171,22 @@
       tableBody.appendChild(row);
     });
   }
+      document.addEventListener("DOMContentLoaded", function() {
+  const storedViolations = JSON.parse(localStorage.getItem("violations"));
+  if (storedViolations && storedViolations.length > 0) {
+    const tableBody = document.getElementById("reportTable").querySelector("tbody");
+    storedViolations.forEach(violation => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${violation.santriName}</td>
+        <td>${violation.violationType}</td>
+        <td>${violation.violationDate}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+});
+
 });
 
   </script>
