@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Guru</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+    }
+
+    .content {
+      padding: 20px;
+    }
+
+    .role {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .btn-logout {
+      background-color: #f44336;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .btn-logout:hover {
+      background-color: #e53935;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .filter-container {
+      margin-top: 20px;
+    }
+
+    select {
+      padding: 8px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Selamat datang, Guru</h1>
+  </div>
+
+  <div class="content">
+    <p class="role">Role: Guru</p>
+    <p>Ini adalah halaman dashboard untuk Guru. Anda dapat melihat data pelanggaran santri, memberi penilaian, dan memberikan laporan.</p>
+
+    <div class="filter-container">
+      <label for="filterSantri">Filter berdasarkan nama santri:</label>
+      <select id="filterSantri" onchange="filterData()">
+        <option value="all">Semua</option>
+      </select>
+    </div>
+
+    <table id="pelanggaranTable">
+      <thead>
+        <tr>
+          <th>Nama Santri</th>
+          <th>Pelanggaran</th>
+          <th>Tanggal</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <button class="btn-logout" onclick="logout()">Keluar</button>
+  </div>
+
+  <script>
+    function logout() {
+      localStorage.removeItem("isLoggedIn");
+      localStorage.removeItem("role");
+      window.location.href = "login.html";
+    }
+
+    function getData() {
+      const data = JSON.parse(localStorage.getItem("pelanggaranSantri")) || [];
+      return data;
+    }
+
+    function populateTable(data) {
+      const tbody = document.querySelector("#pelanggaranTable tbody");
+      tbody.innerHTML = "";
+
+      data.forEach(item => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.nama}</td>
+          <td>${item.pelanggaran}</td>
+          <td>${item.tanggal}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function populateFilterOptions(data) {
+      const select = document.getElementById("filterSantri");
+      const names = [...new Set(data.map(item => item.nama))];
+      names.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
+    }
+
+    function filterData() {
+      const selected = document.getElementById("filterSantri").value;
+      const data = getData();
+      if (selected === "all") {
+        populateTable(data);
+      } else {
+        const filtered = data.filter(item => item.nama === selected);
+        populateTable(filtered);
+      }
+    }
+
+    // Inisialisasi saat halaman dimuat
+    document.addEventListener("DOMContentLoaded", () => {
+      const data = getData();
+      populateFilterOptions(data);
+      populateTable(data);
+    }
+    )
+    document.addEventListener("DOMContentLoaded", function() {
+  const storedViolations = JSON.parse(localStorage.getItem("violations"));
+  if (storedViolations && storedViolations.length > 0) {
+    const tableBody = document.getElementById("reportTable").querySelector("tbody");
+    storedViolations.forEach(violation => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${violation.santriName}</td>
+        <td>${violation.violationType}</td>
+        <td>${violation.violationDate}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  }
+});
+
+  </script>
+</body>
+</html>

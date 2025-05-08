@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background-color: #121212;
+      color: white;
+    }
+
+    .header {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 15px 20px;
+      text-align: center;
+      position: relative;
+      transition: background-color 0.3s ease;
+    }
+
+    .header.dark-mode {
+      background-color: #333;
+    }
+
+    .header button {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .header button.dark-mode {
+      color: #bbb;
+    }
+
+    .content {
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 1200px;
+    }
+
+    .role {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .tabs {
+      display: flex;
+      background-color: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 12px 20px;
+      text-align: center;
+      cursor: pointer;
+      background-color: #c8e6c9;
+      font-weight: 500;
+      border-right: 1px solid #a5d6a7;
+      transition: background-color 0.3s ease;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .tab:last-child {
+      border-right: none;
+    }
+
+    .tab.active {
+      background-color: #4caf50;
+      color: white;
+      font-weight: 700;
+    }
+
+    .tab:hover {
+      background-color: #a5d6a7;
+    }
+
+    .tab-content {
+      background-color: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    label {
+      font-size: 16px;
+      margin-top: 10px;
+      font-weight: 500;
+      display: block;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: #4caf50;
+    }
+
+    button {
+      background-color: #4caf50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #388e3c;
+    }
+
+    .dark-mode button {
+      background-color: #333;
+      color: white;
+    }
+
+    .dark-mode button:hover {
+      background-color: #555;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 10;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 400px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    .modal-buttons {
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    .modal-buttons .btn {
+      margin-left: 10px;
+    }
+
+    .filter-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .filter-section select {
+      width: 30%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .filter-section input {
+      width: 30%;
+    }
+
+    /* Dark mode customization */
+    body.dark-mode .tabs {
+      background-color: #333;
+    }
+
+    body.dark-mode .tab {
+      background-color: #444;
+      color: white;
+    }
+
+    body.dark-mode .tab.active {
+      background-color: #4caf50;
+    }
+
+    body.dark-mode .tab:hover {
+      background-color: #555;
+    }
+
+    body.dark-mode .tab-content {
+      background-color: #333;
+      color: white;
+    }
+
+    body.dark-mode label {
+      color: white;
+    }
+
+    body.dark-mode input, body.dark-mode select {
+      background-color: #555;
+      color: white;
+      border-color: #888;
+    }
+
+    body.dark-mode input:focus, body.dark-mode select:focus {
+      border-color: #4caf50;
+    }
+
+    body.dark-mode .filter-section select, body.dark-mode .filter-section input {
+      background-color: #444;
+      color: white;
+    }
+
+    body.dark-mode .modal-content {
+      background-color: #444;
+      color: white;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Selamat datang, Admin</h1>
+    <button class="btn-toggle-darkmode" onclick="toggleDarkMode()">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+
+  <div class="content">
+    <p class="role">Role: Admin</p>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="santriTab">Input Nama Santri</div>
+      <div class="tab" data-tab="violationTab">Input Jenis Pelanggaran</div>
+      <div class="tab" data-tab="addViolationTab">Tambah Pelanggaran</div>
+      <div class="tab" data-tab="reportTab">Laporan</div>
+      <div class="tab" data-tab="settingsTab">Pengaturan</div>
+    </div>
+
+    <div id="santriTab" class="tab-content active">
+      <h2>Input Nama Santri</h2>
+      <form id="santriForm">
+        <label for="santriName">Nama Santri:</label>
+        <input type="text" id="santriName" required placeholder="Masukkan nama santri" />
+        <button type="submit">Simpan Nama Santri</button>
+      </form>
+    </div>
+
+    <div id="violationTab" class="tab-content">
+      <h2>Input Jenis Pelanggaran</h2>
+      <form id="violationForm">
+        <label for="violationType">Jenis Pelanggaran:</label>
+        <input type="text" id="violationType" required placeholder="Masukkan jenis pelanggaran" />
+        <button type="submit">Simpan Jenis Pelanggaran</button>
+      </form>
+    </div>
+
+    <div id="addViolationTab" class="tab-content">
+      <h2>Tambah Pelanggaran</h2>
+      <form id="addViolationForm">
+        <label for="santriSelect">Nama Santri:</label>
+        <select id="santriSelect" required></select>
+
+        <label for="violationSelect">Jenis Pelanggaran:</label>
+        <select id="violationSelect" required></select>
+
+        <label for="violationDate">Tanggal Pelanggaran:</label>
+        <input type="date" id="violationDate" required />
+
+        <button type="submit">Tambah Pelanggaran</button>
+      </form>
+    </div>
+
+    <div id="reportTab" class="tab-content">
+      <h2>Laporan</h2>
+      <div class="filter-section">
+        <div>
+          <label for="santriFilter">Filter Nama Santri:</label>
+          <select id="santriFilter">
+            <option value="">-- Pilih Santri --</option>
+          </select>
+        </div>
+        <div>
+          <label for="violationFilter">Filter Jenis Pelanggaran:</label>
+          <select id="violationFilter">
+            <option value="">-- Pilih Jenis Pelanggaran --</option>
+          </select>
+        </div>
+        <div>
+          <label for="dateFilter">Filter Tanggal Pelanggaran:</label>
+          <input type="date" id="dateFilter" />
+        </div>
+      </div>
+      <table id="reportTable" border="1" width="100%">
+        <thead>
+          <tr>
+            <th>Nama Santri</th>
+            <th>Jenis Pelanggaran</th>
+            <th>Tanggal Pelanggaran</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Data pelanggaran akan muncul di sini -->
+        </tbody>
+      </table>
+    </div>
+
+    <div id="settingsTab" class="tab-content">
+      <h2>Pengaturan</h2>
+      <p>Pengaturan aplikasi dapat diubah di sini.</p>
+    </div>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const tabContents = document.querySelectorAll(".tab-content");
+
+    let santriList = [];
+    let violationList = [];
+    let violations = [];
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const darkModeButton = document.querySelector(".btn-toggle-darkmode i");
+      if (document.body.classList.contains("dark-mode")) {
+        darkModeButton.classList.remove("fa-moon");
+        darkModeButton.classList.add("fa-sun");
+      } else {
+        darkModeButton.classList.remove("fa-sun");
+        darkModeButton.classList.add("fa-moon");
+      }
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        const target = tab.getAttribute("data-tab");
+        tabContents.forEach(tc => {
+          if (tc.id === target) {
+            tc.classList.add("active");
+          } else {
+            tc.classList.remove("active");
+          }
+        });
+      });
+    });
+
+    document.getElementById("santriForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const santriName = document.getElementById("santriName").value;
+      if (santriName) {
+        santriList.push(santriName);
+        updateSantriSelect();
+        alert("Nama Santri telah disimpan!");
+      }
+    });
+
+    document.getElementById("violationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const violationType = document.getElementById("violationType").value;
+      if (violationType) {
+        violationList.push(violationType);
+        updateViolationSelect();
+        alert("Jenis Pelanggaran telah disimpan!");
+      }
+    });
+
+    document.getElementById("addViolationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const santriName = document.getElementById("santriSelect").value;
+      const violationType = document.getElementById("violationSelect").value;
+      const violationDate = document.getElementById("violationDate").value;
+
+      if (santriName && violationType && violationDate) {
+        violations.push({ santriName, violationType, violationDate });
+        updateReportTable();
+        alert("Pelanggaran telah ditambahkan!");
+      }
+    });
+
+    function updateSantriSelect() {
+      const santriSelect = document.getElementById("santriSelect");
+      const santriFilter = document.getElementById("santriFilter");
+
+      santriSelect.innerHTML = "<option value=''>-- Pilih Santri --</option>";
+      santriFilter.innerHTML = "<option value=''>-- Pilih Santri --</option>";
+
+      santriList.forEach(santri => {
+        santriSelect.innerHTML += `<option value="${santri}">${santri}</option>`;
+        santriFilter.innerHTML += `<option value="${santri}">${santri}</option>`;
+      });
+    }
+
+    function updateViolationSelect() {
+      const violationSelect = document.getElementById("violationSelect");
+      const violationFilter = document.getElementById("violationFilter");
+
+      violationSelect.innerHTML = "<option value=''>-- Pilih Jenis Pelanggaran --</option>";
+      violationFilter.innerHTML = "<option value=''>-- Pilih Jenis Pelanggaran --</option>";
+
+      violationList.forEach(violation => {
+        violationSelect.innerHTML += `<option value="${violation}">${violation}</option>`;
+        violationFilter.innerHTML += `<option value="${violation}">${violation}</option>`;
+      });
+    }
+
+    function updateReportTable() {
+      const tableBody = document.getElementById("reportTable").querySelector("tbody");
+      tableBody.innerHTML = "";
+
+      violations.forEach(violation => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${violation.santriName}</td>
+          <td>${violation.violationType}</td>
+          <td>${violation.violationDate}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+      document.getElementById("addViolationForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const santriName = document.getElementById("santriSelect").value;
+      const violationType = document.getElementById("violationSelect").value;
+      const violationDate = document.getElementById("violationDate").value;
+
+      if (santriName && violationType && violationDate) {
+        const newViolation = { santriName, violationType, violationDate };
+        violations.push(newViolation);
+        localStorage.setItem("violations", JSON.stringify(violations));  // Simpan data ke localStorage
+        updateReportTable();
+        alert("Pelanggaran telah ditambahkan!");
+      }
+    });
+
+    }
+  </script>
+</body>
+</html>
